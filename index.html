@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#17171D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Clayframe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="./" aria-label="Clayframe"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#17171D"/><defs><radialGradient id="g" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#F6C9A0"/><stop offset=".55" stop-color="#E8A87C"/><stop offset="1" stop-color="#8E4F2E"/></radialGradient></defs><ellipse cx="32" cy="50" rx="15" ry="3.5" fill="#000" opacity=".35"/><path d="M32 13c10 0 17 7 17 17 0 11-7 18-17 18s-17-6-17-17c0-10 7-18 17-18z" fill="url(#g)"/><circle cx="26.5" cy="27" r="2.6" fill="#2B2B33"/><circle cx="37.5" cy="27" r="2.6" fill="#2B2B33"/><path d="M26 35c3.5 3 8.5 3 12 0" stroke="#2B2B33" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M50 9l4 4-4 4-4-4z" fill="#F2B35E"/></svg><b>Clayframe</b></a>
+  <select id="proj" aria-label="Project"></select>
+  <button id="menuBtn" class="iconbtn" type="button" aria-label="Projects and settings">⋯</button>
+  <span class="grow"></span>
+  <button id="undo" class="iconbtn" type="button" aria-label="Undo" title="Undo">↶</button>
+  <button id="redo" class="iconbtn" type="button" aria-label="Redo" title="Redo">↷</button>
+  <button id="exportBtn" class="btn primary" type="button">Export</button>
+</header>
+<div id="main" class="main">
+  <div id="viewWrap" class="viewwrap">
+    <canvas id="view" aria-label="3D view"></canvas>
+    <canvas id="ov" aria-hidden="true"></canvas>
+    <div id="sliders" class="sliders" hidden>
+      <label class="vs"><span>Size</span><input id="radius" type="range" min="8" max="200" value="50" aria-label="Brush size"></label>
+      <label class="vs"><span>Strength</span><input id="strength" type="range" min="1" max="100" value="45" aria-label="Brush strength"></label>
+    </div>
+    <div id="viewBtns" class="viewbtns">
+      <button id="symBtn" class="vbtn tog" type="button" aria-pressed="true" title="Mirror across X">⇋ X</button>
+      <button id="subBtn" class="vbtn tog" type="button" aria-pressed="false" title="Invert the brush" hidden>− Sub</button>
+      <button id="frameBtn" class="vbtn" type="button" title="Frame the selection">⌖</button>
+      <button id="camViewBtn" class="vbtn tog" type="button" aria-pressed="false" title="Look through the shot camera">🎥</button>
+      <button id="renderBtn" class="vbtn tog" type="button" aria-pressed="false" title="Render view: lights, shadows and a floor">☀</button>
+      <button id="wireBtn" class="vbtn tog" type="button" aria-pressed="false" title="Show the wireframe">▦</button>
+    </div>
+    <div id="banner" class="banner" hidden></div>
+    <div id="stageUI" class="stageui" hidden></div>
+  </div>
+  <div class="modes" role="tablist" aria-label="Mode">
+    <button type="button" role="tab" data-mode="sculpt">Sculpt</button>
+    <button type="button" role="tab" data-mode="objects">Objects</button>
+    <button type="button" role="tab" data-mode="rig">Rig</button>
+    <button type="button" role="tab" data-mode="pose">Pose</button>
+    <button type="button" role="tab" data-mode="stage">Stage</button>
+  </div>
+  <div class="transport">
+    <button class="playbtn" type="button" aria-label="Play">▶</button>
+    <span class="time"><span id="time">0.00</span><span class="muted"> / <span id="dur">0</span>s</span></span>
+    <span class="grow"></span>
+    <button id="keyBtn" class="keybtn big" type="button" title="Keyframe the selection here">◇</button>
+    <button id="autoKey" class="iconbtn tog rec" type="button" aria-pressed="false" title="Auto-key: every change makes a keyframe">●</button>
+    <button id="camKey" class="iconbtn" type="button" title="Keyframe the camera view">🎥◆</button>
+    <button id="onionBtn" class="iconbtn tog" type="button" aria-pressed="false" title="Onion skin: show the previous and next keyframe poses">◎</button>
+    <button id="curvesBtn" class="iconbtn" type="button" title="Curves: edit keyframe values on a graph">〰</button>
+    <button id="tlToggle" class="iconbtn" type="button" title="Show or hide the timeline">▤</button>
+  </div>
+  <section id="timeline" class="tl" aria-label="Timeline"></section>
+  <nav id="tools" class="tools" aria-label="Tools"></nav>
+</div>
+<aside id="sheet" class="sheet" hidden aria-label="Panel">
+  <div class="sheet-head"><b id="sheetTitle"></b><button id="sheetClose" class="iconbtn" type="button" aria-label="Close panel">✕</button></div>
+  <div id="sheetBody" class="sheet-body"></div>
+</aside>
+<dialog id="dlg" aria-label="Dialog"></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="math.js"></script>
+<script src="mesh.js"></script>
+<script src="scene.js"></script>
+<script src="sculpt.js"></script>
+<script src="render.js"></script>
+<script src="app.js"></script>
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>
+</body>
+</html>

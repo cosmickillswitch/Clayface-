@@ -1,0 +1,17 @@
+{
+  "name": "Clayframe",
+  "short_name": "Clayframe",
+  "description": "Sculpt, rig and animate 3D characters: sculpting brushes, bones, shape keys, a keyframe timeline, and a stage mode for live puppeteering with a controller.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0E0E12",
+  "theme_color": "#17171D",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
